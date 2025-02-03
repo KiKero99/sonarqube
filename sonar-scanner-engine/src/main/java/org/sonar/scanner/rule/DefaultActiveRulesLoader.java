@@ -64,6 +64,11 @@ public class DefaultActiveRulesLoader implements ActiveRulesLoader {
     return RULES_ACTIVE_URL + "projectKey=" + projectKey;
   }
 
+  public static void printUrl(String projectKey) {
+    System.out.println(RULES_ACTIVE_URL + "projectKey=" + projectKey);
+  }
+
+
   private static List<LoadedActiveRule> convert(List<ActiveRuleGson> activeRuleGsonList) {
     return activeRuleGsonList.stream()
       .map(DefaultActiveRulesLoader::convertActiveRule)

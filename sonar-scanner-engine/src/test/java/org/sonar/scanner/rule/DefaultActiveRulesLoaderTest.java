@@ -20,6 +20,9 @@
 package org.sonar.scanner.rule;
 
 import com.google.gson.Gson;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -28,6 +31,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.sonar.api.issue.impact.SoftwareQuality;
@@ -39,6 +45,8 @@ import org.sonar.scanner.scan.branch.BranchConfiguration;
 
 import static java.util.Map.entry;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -69,6 +77,15 @@ class DefaultActiveRulesLoaderTest {
   }
 
   @Test
+  void testPrintUrl(){
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    PrintStream printStream = new PrintStream(outputStream);
+    System.setOut(printStream);
+    DefaultActiveRulesLoader.printUrl("TEST");
+    String expectedOutput = "/api/v2/analysis/active_rules?projectKey=TEST";
+    Assertions.assertTrue(outputStream.toString().contains(expectedOutput));
+  }
+  @Test
   void load_shouldRequestRulesAndParseResponse() {
     WsTestUtil.mockReader(wsClient, getUrl(), response());
 
@@ -91,6 +108,8 @@ class DefaultActiveRulesLoaderTest {
   private String getUrl() {
     return "/api/v2/analysis/active_rules?projectKey=" + PROJECT_KEY;
   }
+
+
 
   private Reader response() {
     List<ActiveRuleGson> activeRules = new ArrayList<>();
