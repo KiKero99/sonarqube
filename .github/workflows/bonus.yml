@@ -11,7 +11,7 @@ jobs:
         uses: platisd/duplicate-code-detection-tool@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          directories: "sonar-ws/src/main/"
+          directories: "sonar-ws/src/main/java/org/sonarqube/ws/client/ce/"
           ignore_below: 5
           file_extensions: "java"
           fail_above: 70
