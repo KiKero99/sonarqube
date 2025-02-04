@@ -16,3 +16,4 @@ jobs:
           file_extensions: "java"
           fail_above: 70
           warn_above: 30
+
