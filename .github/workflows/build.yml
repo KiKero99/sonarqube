@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  
     steps:
       - name: Checkout sources
         uses: actions/checkout@v4
@@ -15,8 +15,18 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build jacocoTestReport
 
+      - name: Debug: List Build Directory
+        run: ls -R sonarqube/sonar-application/build/distributions/
+
       - name: Extract SonarQube ZIP
-        run: unzip sonarqube/sonar-application/build/distributions/sonar-application-25.2-SNAPSHOT.zip -d sonarqube/sonar-application/build/distributions/
+        run: |
+          ZIP_FILE="sonarqube/sonar-application/build/distributions/sonar-application-25.2-SNAPSHOT.zip"
+          if [ -f "$ZIP_FILE" ]; then
+            unzip "$ZIP_FILE" -d sonarqube/sonar-application/build/distributions/
+          else
+            echo "ERROR: ZIP file not found! Check Gradle build output."
+            exit 1
+          fi
 
       - name: Start SonarQube
         run: |
